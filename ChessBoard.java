@@ -17,16 +17,15 @@ public class ChessBoard {
 
             ChessPiece piece = board[startLine][startColumn];
 
-            // Обновление переменной check для короля и ладьи, если они двигаются
             if (piece instanceof King) {
-                piece.check = false; // Король больше не может делать рокировку
+                piece.check = false;
             } else if (piece instanceof Rook) {
-                piece.check = false; // Ладья больше не может делать рокировку
+                piece.check = false;
             }
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
-                board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
-                board[startLine][startColumn] = null; // set null to previous cell
+                board[endLine][endColumn] = board[startLine][startColumn];
+                board[startLine][startColumn] = null;
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
 
                 return true;
@@ -34,7 +33,7 @@ public class ChessBoard {
         } else return false;
     }
 
-    public void printBoard() {  //print board in console
+    public void printBoard() {
         System.out.println("Turn " + nowPlayer);
         System.out.println();
         System.out.println("Player 2(Black)");
@@ -99,55 +98,43 @@ public class ChessBoard {
     }
 
     public boolean castling7() {
-        // Проверка для белых
         if (nowPlayer.equals("White")) {
-            // Убедитесь, что в клетке [0][7] (правая ладья) и [0][4] (король) есть фигуры
             if (board[0][7] == null || board[0][4] == null) return false;
-
-            // Проверяем, что это ладья и король
             if (board[0][7].getSymbol().equals("R") && board[0][4].getSymbol().equals("K") &&
                     board[0][5] == null && board[0][6] == null) {  // Между ними не должно быть фигур
-                // Убедитесь, что это белые фигуры
                 if (board[0][7].getColor().equals("White") && board[0][4].getColor().equals("White") &&
                         board[0][7].check && board[0][4].check &&
-                        new King("White").isUnderAttack(this, 0, 6)) {  // Проверка, что король не под атакой на [0][6]
-                    // Если все условия выполнены, выполняем рокировку
+                        new King("White").isUnderAttack(this, 0, 6)) {
                     board[0][4] = null;
                     board[0][6] = new King("White");
                     board[0][6].check = false;
                     board[0][7] = null;
                     board[0][5] = new Rook("White");
                     board[0][5].check = false;
-                    nowPlayer = "Black";  // Меняем игрока
+                    nowPlayer = "Black";
                     return true;
                 }
             }
         }
-        // Проверка для черных
         else {
-            // Убедитесь, что в клетке [7][7] (правая ладья) и [7][4] (король) есть фигуры
             if (board[7][7] == null || board[7][4] == null) return false;
-
-            // Проверяем, что это ладья и король
             if (board[7][7].getSymbol().equals("R") && board[7][4].getSymbol().equals("K") &&
-                    board[7][5] == null && board[7][6] == null) {  // Между ними не должно быть фигур
-                // Убедитесь, что это черные фигуры
+                    board[7][5] == null && board[7][6] == null) {
                 if (board[7][7].getColor().equals("Black") && board[7][4].getColor().equals("Black") &&
                         board[7][7].check && board[7][4].check &&
-                        new King("Black").isUnderAttack(this, 7, 6)) {  // Проверка, что король не под атакой на [7][6]
-                    // Если все условия выполнены, выполняем рокировку
+                        new King("Black").isUnderAttack(this, 7, 6)) {
                     board[7][4] = null;
                     board[7][6] = new King("Black");
                     board[7][6].check = false;
                     board[7][7] = null;
                     board[7][5] = new Rook("Black");
                     board[7][5].check = false;
-                    nowPlayer = "White";  // Меняем игрока
+                    nowPlayer = "White";
                     return true;
                 }
             }
         }
-        return false;  // Если рокировка невозможна
+        return false;
     }
 
 }
